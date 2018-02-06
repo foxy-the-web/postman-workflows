@@ -1,0 +1,27 @@
+{
+  "name": "mmp_item-data-supply_test",
+  "version": "1.0.0",
+  "description": "test different api endpoints for mmp data supply ",
+  "main": "workflow.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/foxy-the-web/postman-workflows.git"
+  },
+  "author": "René Schulz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/foxy-the-web/postman-workflows/issues"
+  },
+  "homepage": "https://github.com/foxy-the-web/postman-workflows#readme",
+  "devDependencies": {
+    "gulp-livereload": "^3.8.1",
+    "gulp-nodemon": "^2.2.1"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "gulp": "^3.9.1"
+  }
+}

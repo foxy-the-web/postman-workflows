@@ -10,7 +10,7 @@ parameter [object]:
 Empty object to store relevant data of initial M2 request for further request 
 in the test workflow. It is used as globel variable in the collection runner.
 */
-let parameters = {};
+let parameters = {}; // 
 
 /* 
 configuration [object]: 
@@ -183,3 +183,5 @@ getGlobalVariables(configuration, response[1]);
 
 // buildCurrentRequest(parameters, configuration, postman1);
 // controlNextRequest(counter, parameters);
+
+console.log('Test it works');
