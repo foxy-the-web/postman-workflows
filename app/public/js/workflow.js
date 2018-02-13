@@ -10,14 +10,14 @@ parameter [object]:
 Empty object to store relevant data of initial M2 request for further request 
 in the test workflow. It is used as globel variable in the collection runner.
 */
-let parameters = {}; // 
+let parameters = {};
 
 /* 
 configuration [object]: 
 Configuration object to define necessary attributes for further requests.
 */
 let configuration = {
-  item: ["seasonId", "companyId", "id"],
+  item: ["seasonId", "companyId", "id", "articleNumber"],
   itemEfforts: ["companyEffortCode", "effortCode", "workSection", "workPage", "effortVariant", "workPageKey"]
 };
 
@@ -27,18 +27,33 @@ Get attributes, defined in configuration, form response and store it in paramete
 object for further usage in postman.
 */ 
 const getGlobalVariables = (cfg, res) => {
-  
-  // check size of response 
-  res = res.length === 1 ? res[0] : () => { console.log('There are more items in the response than expected.') };
-  // check sizte of itemEfforts
-  let itemEffortsIds = Object.keys(res.itemEfforts);
-  
+
+    // console.log(`Iterations: ${itr}`);
+    parameters = {};
+    
+    // console.log(res);
+
+    // check size of response 
+    res = res.length === 1 ? res[0] : () => { console.log('There are more items in the response than expected.') };
+    // check sizte of itemEfforts
+    let itemEffortsIds = Object.keys(res.itemEfforts);
+    
+    // DEBUG: console.log(par);
+
     // create keys to store relevant attributes of configuration
     for ( let key of Object.keys(cfg) ) {
+
         parameters[key] = {};
-    
-        // create logic for itemEfforts
-        if ( key === "itemEfforts" ) {
+        
+        // create logic for items 
+        if ( key === 'item' ) {
+            // loop through other configuration keys | could be refactored because ot DRY (1)
+            for ( let element of cfg[key] ) {
+                parameters[key][element] = res[element];
+                // DEBUG: console.log(`Parameters: ${parameters[key][element]} | Response: ${res[element]}`);
+            }
+        }
+        else if ( key === 'itemEfforts' ) {
             // create itemEfforts entities in parameters
             for ( let id of itemEffortsIds ) { 
                 parameters[key][id] = {}; 
@@ -46,18 +61,12 @@ const getGlobalVariables = (cfg, res) => {
                 for ( let element of cfg[key] ) {
                 // store values form response to parameters
                 parameters[key][id][element] = res[key][id][element];
+                // DEBUG: console.log(`Parameters: ${parameters[key][id][element]} | Response: ${res[key][id][element]}`);
                 }
             }
         }
-    
-        // create logic for items 
-        else {
-            // loop through other configuration keys | could be refactored because ot DRY (1)
-            for ( let element of cfg[key] ) {
-                parameters[key][element] = res[element];
-            }
-        }
     } 
+    return parameters;
 };
 
 /* 
@@ -96,7 +105,9 @@ const buildCurrentRequest = (par, cfg, postman, counter) => {
             // DEBUG: console.log(`Found no {{ }} variables in path for ${entry}`);
         }
     }
-    // DEBUG: console.log(pathVars);
+    // DEBUG: 
+    console.log(par);
+    console.log(pathVars);
   
     // loop through keys of configuration to compare hierarchy
     for ( let key of Object.keys(cfg) ) {
@@ -111,14 +122,14 @@ const buildCurrentRequest = (par, cfg, postman, counter) => {
                 // DEBUG: console.log(`Compare ${entry} [cfg] with ${element} [pathVars], used ${regexp} as RegExp!`); 
                 if ( match && key === "item" ) {
                     // DEBUG: console.log(`Matching is ${match} on level: ${key} with ${par[key][element]} for ${element}`);
-                    pm.globals.set(element, par[key][element]);
+                    // pm.globals.set(element, par[key][element]);
                 }
                 else if ( match && key === "itemEfforts" ) {
                     // loop through itemEfforts object to find a relevant 
                     let itemEffortsKeys = Object.keys(par[key]);
                     let itemEffortId = ( counter < itemEffortsKeys.length ) ? itemEffortsKeys[counter] : counter + 1;
                     // DEBUG: console.log(`Matching is ${match} on level: ${key} with ${par[key][itemEffortId][element]} for ${element}`);
-                    pm.globals.set(element, par[key][itemEffortId][element]);
+                    // pm.globals.set(element, par[key][itemEffortId][element]);
                 }
             }
         }
@@ -127,7 +138,7 @@ const buildCurrentRequest = (par, cfg, postman, counter) => {
     counter++;
     // DEBUG: console.log(`Counter after execution: ${counter}`);
     // set global counter if needed: pm.globals.set("counter", counter);
-    return counter;
+    // return counter;
 };
 
 /* 
@@ -179,9 +190,45 @@ const controlNextRequest = (counter, data) => {
 };
 
 // inialize methods
-getGlobalVariables(configuration, response[1]);
-
+// getGlobalVariables(configuration, res);
 // buildCurrentRequest(parameters, configuration, postman1);
-// controlNextRequest(counter, parameters);
 
-console.log('Test it works');
+/*
+simulateRunner [method]:
+The method is used to simulate a runner task with different API calls and several iterations
+*/
+const simulateRunner = (cfg) => {
+    
+    // iteration number due to response object
+    const iterations = Object.keys(response).length;
+
+    // iterate over requests
+    for ( let i = 0; i < iterations; i++ ) {
+        let currentRes = response[i][0];
+        let currentPars = getGlobalVariables(cfg, response[i]);
+        let nextReq = controlNextRequest(0, currentRes);
+
+        let itemEffortsLength = Object.keys(parameters.itemEfforts).length; 
+        let countWorkpageRequests = ( itemEffortsLength > 1 ) ? `${itemEffortsLength} workpage requests.` : `no repetition.`; 
+
+        // DEBUG: console.log(currentPars);
+
+        document.write(`<b>${currentRes.id}: ${nextReq} run with ${countWorkpageRequests}</b></br>`);
+        // iterate over collection requests 
+        for ( let req in collectionRequests ) {
+            document.write(`<small>${collectionRequests[req]}</small></br>`);
+            document.write(`<small>Parameters: </small></br>`); // ${collectionRequests.uri[req]}
+            // if workpage request has to be repeated
+            if ( nextReq === "replay" && req == 3 ) {
+                document.write(`<small>New: ${collectionRequests[3]}</small></br>`);
+            }
+        }
+    }
+
+    for ( let a = 0; a <= 3; a++ ) {
+        buildCurrentRequest(parameters, configuration, postman[a], counter);
+    }
+
+};
+
+simulateRunner(configuration);
