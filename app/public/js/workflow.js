@@ -98,27 +98,36 @@ const buildCurrentRequest = (par, cfg, postman, counter) => {
         // slice relevant strings
         if ( startSlice !== -1 || endSlice !== -1 ) {
             entry = entry.slice(startSlice, endSlice);
+
+            // condition for concated variabels
+            if ( entry.search("}}{{") != -1 ) {
+                // DEBUG: console.log(`Found concated variables for postman-execution-id: ${postman.__execution.id} for "${entry}". Please provide single variables.`);
+                entry = false;
+            }
+
             // push sliced entries to new array current parameters
             pathVars.push(entry);
         }
         else {
             // DEBUG: console.log(`Found no {{ }} variables in path for ${entry}`);
         }
+
     }
     // DEBUG: 
-    console.log(par);
-    console.log(pathVars);
+    // console.log(par);
+    // console.log(pathVars);
   
     // loop through keys of configuration to compare hierarchy
     for ( let key of Object.keys(cfg) ) {
         // check entity levels
         for ( let entry of cfg[key] ){
-        // check values of parthVars against entries of configuration
+            // check values of pathVars against entries of configuration
             for ( let element of pathVars ) {
                 // set regular expression from path variables form current request to find match with parameters
                 let regexp =  new RegExp(`\\b${element}\\b`);
-                // control condition, just matched resultes are relevant for execution
+                // control condition, just matched results are relevant for execution
                 let match = entry.match(regexp) ? true : false;
+                console.log(match);
                 // DEBUG: console.log(`Compare ${entry} [cfg] with ${element} [pathVars], used ${regexp} as RegExp!`); 
                 if ( match && key === "item" ) {
                     // DEBUG: console.log(`Matching is ${match} on level: ${key} with ${par[key][element]} for ${element}`);
@@ -204,6 +213,7 @@ const simulateRunner = (cfg) => {
 
     // iterate over requests
     for ( let i = 0; i < iterations; i++ ) {
+
         let currentRes = response[i][0];
         let currentPars = getGlobalVariables(cfg, response[i]);
         let nextReq = controlNextRequest(0, currentRes);
@@ -217,15 +227,17 @@ const simulateRunner = (cfg) => {
         // iterate over collection requests 
         for ( let req in collectionRequests ) {
             document.write(`<small>${collectionRequests[req]}</small></br>`);
-            document.write(`<small>Parameters: </small></br>`); // ${collectionRequests.uri[req]}
+            // document.write(`<small>Parameters: </small></br>`); // ${collectionRequests.uri[req]}
             // if workpage request has to be repeated
             if ( nextReq === "replay" && req == 3 ) {
                 document.write(`<small>New: ${collectionRequests[3]}</small></br>`);
             }
         }
+    
     }
 
     for ( let a = 0; a <= 3; a++ ) {
+        // 
         buildCurrentRequest(parameters, configuration, postman[a], counter);
     }
 

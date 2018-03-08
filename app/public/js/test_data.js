@@ -19,7 +19,7 @@ const postman = [
 ];
 
 const collectionRequests = [
-  "Search M2 items by article number",
+  "[M2] Search item - articleNumber",
   "[ArticleService] Search item - articleNumber",
   "[ArticleService] Search item - comkey",
   "[ArticleService] Search items - workPage"
