@@ -18,7 +18,8 @@
   "homepage": "https://github.com/foxy-the-web/postman-workflows#readme",
   "devDependencies": {
     "gulp-livereload": "^3.8.1",
-    "gulp-nodemon": "^2.2.1"
+    "gulp-nodemon": "^2.2.1",
+    "newman": "^3.9.3"
   },
   "dependencies": {
     "express": "^4.16.2",

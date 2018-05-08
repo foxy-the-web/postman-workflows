@@ -4,7 +4,7 @@ const nodemon = require('gulp-nodemon');
 const livereload = require('gulp-livereload');
 
 // files and folder to watch
-const files = ['public/js/workflow.js','public/*.html'];
+const files = ['public/js/workflow.js','public/js/get_collection_data.js' ,'public/*.html'];
 
 // default task
 gulp.task('default', () => {

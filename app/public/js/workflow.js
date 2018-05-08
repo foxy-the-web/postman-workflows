@@ -74,12 +74,12 @@ buildCurrentRequest [method]:
 Execute global parameters object and build single parameters for current request. You need to use it as a
 pre-request script.
 */ 
-const buildCurrentRequest = (par, cfg, postman, counter) => {
+const buildCurrentRequest = (par, cfg, collection, counter) => {
   
     // DEBUG: console.log(`Counter before execution: ${counter}`);
-  
+
     // get current request parameters
-    let pathArray = postman.__execution.request.url.path;
+    let pathArray = collection.__execution.request.url.path;
       
     // relevant path parameteres / variables
     let pathVars = [];
@@ -127,7 +127,7 @@ const buildCurrentRequest = (par, cfg, postman, counter) => {
                 let regexp =  new RegExp(`\\b${element}\\b`);
                 // control condition, just matched results are relevant for execution
                 let match = entry.match(regexp) ? true : false;
-                console.log(match);
+                // console.log(match);
                 // DEBUG: console.log(`Compare ${entry} [cfg] with ${element} [pathVars], used ${regexp} as RegExp!`); 
                 if ( match && key === "item" ) {
                     // DEBUG: console.log(`Matching is ${match} on level: ${key} with ${par[key][element]} for ${element}`);

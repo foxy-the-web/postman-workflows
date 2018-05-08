@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "83e0e037-82bd-4eb7-b3ca-95da2d58ebbf",
+		"name": "Runner",
+		"description": "A collection of requests to test product data in several applications.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. M2",
+			"description": "",
+			"item": [
+				{
+					"name": "[M2] Search item by articleNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3ad5622c-1dfc-4d80-9e0d-39ad1dc38dd7",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "42f85207-a765-4ad2-871b-b39b5117c307",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://api.prod.m2.ov.otto.de/search/article_number/{{articlenr}}",
+							"protocol": "https",
+							"host": [
+								"api",
+								"prod",
+								"m2",
+								"ov",
+								"otto",
+								"de"
+							],
+							"path": [
+								"search",
+								"article_number",
+								"{{articlenr}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "Sw9TMnwT3*+%4des",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "veops",
+						"type": "string"
+					},
+					{
+						"key": "saveHelperData",
+						"value": true,
+						"type": "boolean"
+					},
+					{
+						"key": "showPassword",
+						"value": false,
+						"type": "boolean"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6bdd7de8-3719-412e-a114-ca71ccd5546f",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "06cfff99-07cb-44c7-897a-bb9d014764d6",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "2. ArticleService",
+			"description": "",
+			"item": [
+				{
+					"name": "[ArticleService] Search 1 item by articleNumber",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7891befa-4830-4bf6-b7b7-ea0470e7120c",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://10.80.1.82/api/article-service/articles/{{companyId}}/{{seasonId}}/{{articlenr}}",
+							"protocol": "http",
+							"host": [
+								"10",
+								"80",
+								"1",
+								"82"
+							],
+							"path": [
+								"api",
+								"article-service",
+								"articles",
+								"{{companyId}}",
+								"{{seasonId}}",
+								"{{articlenr}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ArticleService] Search 1 item by item comkey",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f269ac74-4478-455c-8e3a-6c89a9d47fa2",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "b5526910-fde7-4d45-aa09-b8f438ecf3c5",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic b3R0bzpVdzVkWXZSOHBtd2c="
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://10.80.1.82/api/article-service/articles/{{id}}",
+							"protocol": "http",
+							"host": [
+								"10",
+								"80",
+								"1",
+								"82"
+							],
+							"path": [
+								"api",
+								"article-service",
+								"articles",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[ArticleService] Search n items by workPage",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "aef7abad-2dff-47f5-aac1-118dc7834c39",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Basic b3R0bzpVdzVkWXZSOHBtd2c="
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://10.80.1.82/api/article-service/articles/{{companyId}}/{{seasonId}}/{{effortCode}}/{{effortVariant}}/{{workSection}}{{workPage}}/{{workSection}}{{workPage}}",
+							"protocol": "http",
+							"host": [
+								"10",
+								"80",
+								"1",
+								"82"
+							],
+							"path": [
+								"api",
+								"article-service",
+								"articles",
+								"{{companyId}}",
+								"{{seasonId}}",
+								"{{effortCode}}",
+								"{{effortVariant}}",
+								"{{workSection}}{{workPage}}",
+								"{{workSection}}{{workPage}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "Uw5dYvR8pmwg",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "otto",
+						"type": "string"
+					},
+					{
+						"key": "saveHelperData",
+						"value": true,
+						"type": "boolean"
+					},
+					{
+						"key": "showPassword",
+						"value": false,
+						"type": "boolean"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "15d4c360-47ed-4f19-833c-a4be7a964ab4",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "89f79a38-993e-45b5-adb7-b3fc0ee2566d",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "5c8e1353-6608-42d4-8db6-7e86f53da723",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b9e218f7-ac34-45d3-a1a6-f4bbdc8097c0",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
